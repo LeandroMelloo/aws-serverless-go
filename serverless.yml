@@ -1,0 +1,46 @@
+service: aws-serverless-go
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: go1.x
+  stage: dev
+  region: us-east-1
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: 
+            - dynamodb: PutItem
+          Resource:
+            - "" 
+
+package:
+  patterns:
+    - '!./**'
+    - ./bin/**
+
+functions:
+  insert:
+    handler: bin/InsertProduct
+    events:
+      - httpApi:
+          path: /products
+          method: post
+
+resources:
+  Resources:
+    Products:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Products
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
