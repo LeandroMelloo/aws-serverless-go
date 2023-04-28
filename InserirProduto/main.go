@@ -12,45 +12,45 @@ import (
 	"github.com/google/uuid"
 )
 
-type Product struct {
+type Produto struct {
 	ID    string `json:"id"`
-	Name  string `json:"name"`
-	Price int    `json:"price"`
+	Nome  string `json:"nome"`
+	Preco int    `json:"preco"`
 }
 
-func InsertProduct(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	var product Product
-	err := json.Unmarshal([]byte(request.Body), &product)
+func InserirProduto(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	var produto Produto
+	err := json.Unmarshal([]byte(request.Body), &produto)
 	if err != nil {
 		return events.APIGatewayProxyResponse{Body: err.Error(), StatusCode: 400}, nil
 	}
 
-	product.ID = uuid.New().String()
+	produto.ID = uuid.New().String()
 
-	sessions := session.Must(session.NewSession())
-	services := dynamodb.New(sessions)
+	sessao := session.Must(session.NewSession()) // abro uma nova sessão
+	servicos := dynamodb.New(sessao)
 
-	input := &dynamodb.PutItemInput{
-		TableName: aws.String("Products"),
+	entrada := &dynamodb.PutItemInput{
+		TableName: aws.String("Produtos"),
 		Item: map[string]*dynamodb.AttributeValue{
 			"id": {
-				S: aws.String(product.ID),
+				S: aws.String(produto.ID),
 			},
-			"name": {
-				S: aws.String(product.Name),
+			"nome": {
+				S: aws.String(produto.Nome),
 			},
 			"price": {
-				S: aws.String(strconv.Itoa(product.Price)),
+				S: aws.String(strconv.Itoa(produto.Preco)),
 			},
 		},
 	}
 
-	_, err = services.PutItem(input)
+	_, err = servicos.PutItem(entrada)
 	if err != nil {
 		return events.APIGatewayProxyResponse{Body: err.Error(), StatusCode: 500}, nil
 	}
 
-	body, err := json.Marshal(product)
+	body, err := json.Marshal(produto)
 	if err != nil {
 		return events.APIGatewayProxyResponse{Body: err.Error(), StatusCode: 500}, nil
 	}
@@ -65,5 +65,5 @@ func InsertProduct(request events.APIGatewayProxyRequest) (events.APIGatewayProx
 }
 
 func main() {
-	lambda.Start(InsertProduct)
+	lambda.Start(InserirProduto)
 }

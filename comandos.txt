@@ -1,0 +1,10 @@
+Comandos serverless
+- npm install serverless
+- serverless create --template aws-go-mod
+
+Comandos Golang
+- go mod init github.com/LeandroMelloo/aws-serverless-go
+- go mod tidy => go mod tidy é igual ao npm install
+
+Comandos aws
+- aws dynamodb describe-table --table-name Produtos --query 'Table.TableArn' -> comando para criar uma tabela no dynamodb

@@ -2,7 +2,7 @@
 
 build: gomodgen
 	export GO111MODULE=on
-	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/InsertProduct InsertProduct/main.go
+	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/InserirProduto InserirProduto/main.go
 
 clean:
 	rm -rf ./bin ./vendor go.sum

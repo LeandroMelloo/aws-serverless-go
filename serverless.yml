@@ -12,7 +12,7 @@ provider:
       statements:
         - Effect: Allow
           Action: 
-            - dynamodb: PutItem
+            - dynamodb:PutItem
           Resource:
             - "" 
 
@@ -22,19 +22,19 @@ package:
     - ./bin/**
 
 functions:
-  insert:
-    handler: bin/InsertProduct
+  inserirProduto:
+    handler: bin/InserirProduto
     events:
       - httpApi:
-          path: /products
+          path: /produtos
           method: post
 
 resources:
   Resources:
-    Products:
+    Produtos:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: Products
+        TableName: Produtos
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
